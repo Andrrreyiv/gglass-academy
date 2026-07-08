@@ -123,7 +123,7 @@
       payload.append("consent", "1");
       payload.append("page", location.href);
 
-      fetch("/api/lead.php", { method: "POST", body: payload })
+      fetch("api/lead.php", { method: "POST", body: payload })
         .then(function (r) { return r.ok ? r.json().catch(function () { return { ok: true }; }) : Promise.reject(r); })
         .then(function () {
           form.classList.remove("is-sending");
