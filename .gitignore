@@ -16,3 +16,8 @@ Thumbs.db
 # Временное
 *.tmp
 node_modules/
+
+# Временные копии оригинала Lovable для сверки паритета (НЕ коммитим)
+.orig_lovable.html
+.orig_text.txt
+.repo-body.json

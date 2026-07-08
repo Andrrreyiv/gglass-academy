@@ -205,13 +205,68 @@ summary:focus-visible{
 summary{ outline-offset:2px; }
 
 /* ------------------------------------------------------------------ */
+/* 6. ПРОФЕССИОНАЛЬНЫЕ АНИМАЦИИ (тонкие, без сдвига макета)             */
+/*    Только opacity / transform / box-shadow — геометрия 1:1.         */
+/* ------------------------------------------------------------------ */
+
+/* 6.1 Каскад карточек: внутри раскрытой секции карточки появляются     */
+/*     «волной» по очереди, а не все разом. Даёт ощущение живости.      */
+html.gg-js .gg-reveal .card-glass{
+  opacity:0;
+  transform:translateY(14px);
+  transition:opacity .55s cubic-bezier(.16,.84,.44,1),
+             transform .55s cubic-bezier(.16,.84,.44,1);
+}
+html.gg-js .gg-reveal.gg-in .card-glass{ opacity:1; transform:none; }
+html.gg-js .gg-reveal.gg-in .card-glass:nth-child(1){ transition-delay:.04s; }
+html.gg-js .gg-reveal.gg-in .card-glass:nth-child(2){ transition-delay:.10s; }
+html.gg-js .gg-reveal.gg-in .card-glass:nth-child(3){ transition-delay:.16s; }
+html.gg-js .gg-reveal.gg-in .card-glass:nth-child(4){ transition-delay:.22s; }
+html.gg-js .gg-reveal.gg-in .card-glass:nth-child(5){ transition-delay:.28s; }
+html.gg-js .gg-reveal.gg-in .card-glass:nth-child(6){ transition-delay:.34s; }
+html.gg-js .gg-reveal.gg-in .card-glass:nth-child(n+7){ transition-delay:.40s; }
+
+/* 6.2 Sticky-хедер: при прокрутке появляется тень и плотный фон.       */
+/*     Класс .gg-scrolled вешает JS. Меняем только фон+тень, не высоту. */
+header.gg-scrolled{
+  background-color:rgba(10,15,26,.92);
+  box-shadow:0 10px 30px -14px rgba(0,0,0,.65);
+}
+
+/* 6.3 Блик по главной кнопке при наведении (амбер CTA «оживает»).      */
+.btn-amber{ position:relative; overflow:hidden; }
+.btn-amber::after{
+  content:"";
+  position:absolute; top:0; left:-75%;
+  width:50%; height:100%;
+  background:linear-gradient(120deg,transparent,rgba(255,255,255,.35),transparent);
+  transform:skewX(-20deg);
+  pointer-events:none;
+}
+.btn-amber:hover::after{ animation:gg-shine .8s ease; }
+@keyframes gg-shine{ to{ left:130%; } }
+
+/* 6.4 Карточка при наведении — мягкое амбер-свечение (уже есть подъём). */
+.card-glass:hover{
+  border-color:rgba(232,162,59,.35);
+  box-shadow:0 14px 44px -20px rgba(232,162,59,.28);
+}
+
+/* 6.5 FAQ: «плюс» плавно превращается в «крестик» при раскрытии.       */
+.faq-plus{ transition:transform .25s ease; }
+#faq details[open] .faq-plus{ transform:rotate(45deg); }
+
+/* ------------------------------------------------------------------ */
 /* prefers-reduced-motion: отключаем всё движение                      */
 /* ------------------------------------------------------------------ */
 @media (prefers-reduced-motion:reduce){
   html{ scroll-behavior:auto; }
   html.gg-js .gg-reveal{ opacity:1 !important; transform:none !important; transition:none !important; }
+  html.gg-js .gg-reveal .card-glass{ opacity:1 !important; transform:none !important; transition:none !important; }
   .btn-amber,.btn-ghost,.card-glass{ transition:none !important; }
   .btn-amber:hover,.btn-ghost:hover,.card-glass:hover{ transform:none !important; }
+  .btn-amber::after{ display:none !important; }
+  .faq-plus{ transition:none !important; }
   .crack-path{ animation:none !important; stroke-dashoffset:0 !important; }
   .gg-form.is-sending button[type="submit"] svg{ animation:none !important; }
 }

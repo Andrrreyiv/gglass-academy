@@ -148,9 +148,25 @@
     });
   }
 
+  /* ---------- 5. STICKY-ХЕДЕР: тень при прокрутке ----------------- */
+  function initHeaderScroll() {
+    var header = document.querySelector("header");
+    if (!header) return;
+    var ticking = false;
+    function update() {
+      header.classList.toggle("gg-scrolled", window.scrollY > 8);
+      ticking = false;
+    }
+    window.addEventListener("scroll", function () {
+      if (!ticking) { window.requestAnimationFrame(update); ticking = true; }
+    }, { passive: true });
+    update();
+  }
+
   /* ---------- init ----------------------------------------------- */
   function boot() {
     initReveal();
+    initHeaderScroll();
     initPhoneMask(document.querySelector('#lead-form input[name="phone"]'));
     initForm(document.getElementById("lead-form"));
     initFaq();

@@ -54,6 +54,17 @@ $ip = $_SERVER['REMOTE_ADDR'] ?? '-';
 
 // --- письмо клиенту ---
 $to      = getenv('LEAD_TO')   ?: 'gglass-detailing@yandex.ru';
+
+// ВРЕМЕННО (по просьбе Андрея): дублируем каждую заявку разработчику для контроля.
+// УБРАТЬ при переносе на боевой сайт — удалить строки до пометки [/временно]
+// или очистить env LEAD_CC_DEV на хостинге.
+// ВНИМАНИЕ: проверьте адрес. gmail.ru (российский провайдер) не равно gmail.com (Google).
+$ccDev   = getenv('LEAD_CC_DEV') ?: 'brykun123@gmail.ru';
+if ($ccDev !== '') {
+    $to .= ',' . $ccDev; // mail() принимает получателей через запятую
+}
+// [/временно]
+
 $host    = $_SERVER['HTTP_HOST'] ?? 'gglass-academy.ru';
 $from    = getenv('LEAD_FROM')  ?: ('no-reply@' . preg_replace('/^www\./', '', $host));
 
