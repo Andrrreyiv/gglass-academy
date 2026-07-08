@@ -15,6 +15,10 @@
 
 var LEAD_TO_CLIENT = 'gglass-detailing@yandex.ru';
 var LEAD_TO_DEV    = 'brykun123@gmail.com'; // временно, убрать на бою
+// Общий секрет с api/lead.php (env LEAD_RELAY_TOKEN). Пусто = проверка выключена.
+// Задать одинаковое значение здесь и в LEAD_RELAY_TOKEN на сервере — тогда
+// публичный /exec молча отбрасывает чужие POST без верного token (антиспам).
+var LEAD_RELAY_TOKEN = '';
 
 function doPost(e) {
   var p = (e && e.parameter) ? e.parameter : {};
@@ -25,6 +29,11 @@ function doPost(e) {
 
   // антиспам-honeypot (в форме есть скрытое поле company)
   if (p.company) {
+    return ok_();
+  }
+
+  // проверка общего секрета: если задан LEAD_RELAY_TOKEN — чужой POST молча отбрасываем
+  if (LEAD_RELAY_TOKEN && p.token !== LEAD_RELAY_TOKEN) {
     return ok_();
   }
 
