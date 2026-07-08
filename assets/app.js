@@ -8,6 +8,11 @@
 (function () {
   "use strict";
 
+  // Временный приёмник формы для БЕСПЛАТНОГО превью (GitHub Pages, нет PHP).
+  // Пусто = боевой путь через api/lead.php (на РФ-хостинге с PHP).
+  // Вставить сюда URL Google Apps Script вида .../exec, чтобы тестить отправку писем на превью.
+  var GG_LEAD_GAS_URL = "";
+
   // Помечаем документ: только тогда CSS прячет .gg-reveal (без JS — всё видно).
   document.documentElement.classList.add("gg-js");
 
@@ -123,8 +128,16 @@
       payload.append("consent", "1");
       payload.append("page", location.href);
 
-      fetch("api/lead.php", { method: "POST", body: payload })
-        .then(function (r) { return r.ok ? r.json().catch(function () { return { ok: true }; }) : Promise.reject(r); })
+      var endpoint = GG_LEAD_GAS_URL || "api/lead.php";
+      var opts = { method: "POST", body: payload };
+      // GAS живёт на другом домене: no-cors — ответ непрозрачный, но письмо уходит.
+      if (GG_LEAD_GAS_URL) { opts.mode = "no-cors"; }
+
+      fetch(endpoint, opts)
+        .then(function (r) {
+          if (GG_LEAD_GAS_URL) { return {}; } // no-cors: считаем отправку успешной
+          return r.ok ? r.json().catch(function () { return { ok: true }; }) : Promise.reject(r);
+        })
         .then(function () {
           form.classList.remove("is-sending");
           form.classList.add("is-done");
