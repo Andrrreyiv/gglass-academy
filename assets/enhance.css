@@ -1,0 +1,217 @@
+/* =====================================================================
+   Gglass Academy — enhance.css
+   Слой улучшений поверх оригинального styles.css (визуал 1:1).
+   Задачи:
+     1. Подключить задуманные дизайнером шрифты (Unbounded / Inter / JetBrains Mono).
+        В оригинале они объявлены в CSS, но НЕ загружались — @font-face отсутствовал.
+     2. Поднять контраст до WCAG AA (muted-текст и его opacity-варианты).
+     3. Микроанимации scroll-reveal + hover, с уважением к prefers-reduced-motion.
+     4. Состояния формы (focus / error / loading / success) + чекбокс согласия 152-ФЗ.
+     5. Видимый focus-visible для доступности с клавиатуры.
+   ===================================================================== */
+
+/* ------------------------------------------------------------------ */
+/* 1. ШРИФТЫ (self-hosted woff2, кириллица + латиница)                 */
+/* ------------------------------------------------------------------ */
+/* Inter — основной текст */
+@font-face{font-family:"Inter";font-style:normal;font-weight:400;font-display:swap;
+  src:url("/assets/fonts/inter-cyrillic-400.woff2") format("woff2");
+  unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;}
+@font-face{font-family:"Inter";font-style:normal;font-weight:400;font-display:swap;
+  src:url("/assets/fonts/inter-latin-400.woff2") format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:"Inter";font-style:normal;font-weight:500;font-display:swap;
+  src:url("/assets/fonts/inter-cyrillic-500.woff2") format("woff2");
+  unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;}
+@font-face{font-family:"Inter";font-style:normal;font-weight:500;font-display:swap;
+  src:url("/assets/fonts/inter-latin-500.woff2") format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:"Inter";font-style:normal;font-weight:600;font-display:swap;
+  src:url("/assets/fonts/inter-cyrillic-600.woff2") format("woff2");
+  unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;}
+@font-face{font-family:"Inter";font-style:normal;font-weight:600;font-display:swap;
+  src:url("/assets/fonts/inter-latin-600.woff2") format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:"Inter";font-style:normal;font-weight:700;font-display:swap;
+  src:url("/assets/fonts/inter-cyrillic-700.woff2") format("woff2");
+  unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;}
+@font-face{font-family:"Inter";font-style:normal;font-weight:700;font-display:swap;
+  src:url("/assets/fonts/inter-latin-700.woff2") format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+
+/* Unbounded — display-заголовки (.h-display, .font-display) */
+@font-face{font-family:"Unbounded";font-style:normal;font-weight:600;font-display:swap;
+  src:url("/assets/fonts/unbounded-cyrillic-600.woff2") format("woff2");
+  unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;}
+@font-face{font-family:"Unbounded";font-style:normal;font-weight:600;font-display:swap;
+  src:url("/assets/fonts/unbounded-latin-600.woff2") format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:"Unbounded";font-style:normal;font-weight:700;font-display:swap;
+  src:url("/assets/fonts/unbounded-cyrillic-700.woff2") format("woff2");
+  unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;}
+@font-face{font-family:"Unbounded";font-style:normal;font-weight:700;font-display:swap;
+  src:url("/assets/fonts/unbounded-latin-700.woff2") format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:"Unbounded";font-style:normal;font-weight:800;font-display:swap;
+  src:url("/assets/fonts/unbounded-cyrillic-800.woff2") format("woff2");
+  unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;}
+@font-face{font-family:"Unbounded";font-style:normal;font-weight:800;font-display:swap;
+  src:url("/assets/fonts/unbounded-latin-800.woff2") format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+
+/* JetBrains Mono — тех-лейблы (.font-mono, .label) */
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:400;font-display:swap;
+  src:url("/assets/fonts/jetbrains-mono-cyrillic-400.woff2") format("woff2");
+  unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;}
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:400;font-display:swap;
+  src:url("/assets/fonts/jetbrains-mono-latin-400.woff2") format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:500;font-display:swap;
+  src:url("/assets/fonts/jetbrains-mono-cyrillic-500.woff2") format("woff2");
+  unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;}
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:500;font-display:swap;
+  src:url("/assets/fonts/jetbrains-mono-latin-500.woff2") format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+
+/* ------------------------------------------------------------------ */
+/* 2. КОНТРАСТ WCAG AA                                                 */
+/* muted #8593a4 на #0a0f1a = 6.1:1 (ок), но opacity-варианты          */
+/* (text-muted/60..80, placeholder/70) падают до ~3.3:1.              */
+/* Лёгкий подъём тона до #9aa7b8 (~7.4:1) даёт запас всем вариантам.   */
+/* Не-слоевое :root перебивает @layer-объявление styles.css.          */
+/* ------------------------------------------------------------------ */
+:root{ --muted:#9aa7b8; }
+/* placeholder делаем со сплошной непрозрачностью и достаточным тоном */
+input::placeholder,textarea::placeholder{ color:#8a97a8; opacity:1; }
+
+/* ------------------------------------------------------------------ */
+/* 3. МИКРОАНИМАЦИИ                                                    */
+/* Прячем только когда JS активен (класс gg-js на <html>) —           */
+/* если скрипт не выполнился, контент виден, без FOUC-ловушки.         */
+/* ------------------------------------------------------------------ */
+html.gg-js .gg-reveal{
+  opacity:0;
+  transform:translateY(20px);
+  transition:opacity .7s cubic-bezier(.16,.84,.44,1),
+             transform .7s cubic-bezier(.16,.84,.44,1);
+  will-change:opacity,transform;
+}
+html.gg-js .gg-reveal.gg-in{ opacity:1; transform:none; }
+
+/* Hover-микровзаимодействия (усиливают уже существующие в styles.css) */
+.btn-amber{ transition:transform .18s ease, filter .18s ease, background .18s ease; }
+.btn-amber:hover{ transform:translateY(-2px); filter:brightness(1.04); }
+.btn-amber:active{ transform:translateY(0); }
+.btn-ghost{ transition:transform .18s ease, border-color .18s ease, color .18s ease; }
+.btn-ghost:hover{ transform:translateY(-2px); }
+.card-glass{ transition:border-color .25s ease, transform .25s ease, box-shadow .25s ease; }
+.card-glass:hover{ transform:translateY(-3px); }
+a[href^="tel:"]{ transition:color .18s ease; }
+
+/* Плавный якорный скролл (нативно, без JS) */
+html{ scroll-behavior:smooth; }
+/* Компенсация высоты sticky-хедера при переходе по якорям */
+section[id],main [id]{ scroll-margin-top:88px; }
+
+/* ------------------------------------------------------------------ */
+/* 4. ФОРМА: чекбокс согласия 152-ФЗ + состояния                       */
+/* ------------------------------------------------------------------ */
+.gg-consent{
+  display:flex;
+  align-items:flex-start;
+  gap:.7rem;
+  cursor:pointer;
+  font-family:var(--font-sans);
+  font-size:.82rem;
+  line-height:1.5;
+  color:var(--muted);
+}
+.gg-consent__box{
+  appearance:none;
+  -webkit-appearance:none;
+  flex:0 0 auto;
+  width:20px;height:20px;
+  margin-top:1px;
+  border:1px solid var(--line);
+  background:var(--bg);
+  display:inline-grid;
+  place-content:center;
+  cursor:pointer;
+  transition:border-color .18s ease, background .18s ease;
+}
+.gg-consent__box::before{
+  content:"";
+  width:11px;height:11px;
+  transform:scale(0);
+  transition:transform .15s ease;
+  box-shadow:inset 1em 1em var(--amber);
+  clip-path:polygon(14% 44%,0 65%,50% 100%,100% 16%,80% 0,43% 62%);
+}
+.gg-consent__box:checked{ border-color:var(--amber); }
+.gg-consent__box:checked::before{ transform:scale(1); }
+.gg-consent__box:focus-visible{ outline:2px solid var(--amber); outline-offset:2px; }
+.gg-consent__text a{ color:var(--amber-2); text-decoration:underline; text-underline-offset:3px; }
+.gg-consent__text a:hover{ color:var(--amber); }
+
+/* статус отправки */
+.gg-form__status{
+  font-family:var(--font-mono);
+  font-size:.82rem;
+  letter-spacing:.02em;
+  margin-top:.25rem;
+  min-height:1.2em;
+}
+.gg-form__status.is-error{ color:var(--crack); }
+.gg-form__status.is-ok{ color:var(--amber-2); }
+
+/* инпут с ошибкой валидации */
+.gg-form input.is-invalid,
+.gg-form select.is-invalid{ border-color:var(--crack); }
+
+/* состояние отправки: блокируем кнопку + спиннер */
+.gg-form.is-sending button[type="submit"]{ opacity:.6; pointer-events:none; }
+.gg-form.is-sending button[type="submit"] svg{
+  animation:gg-spin .7s linear infinite;
+}
+@keyframes gg-spin{ to{ transform:rotate(360deg); } }
+
+/* успешная отправка — прячем поля, показываем сообщение */
+.gg-form.is-done .gg-form__fields{ display:none; }
+.gg-form__done{
+  display:none;
+  text-align:center;
+  padding:1rem 0;
+}
+.gg-form.is-done .gg-form__done{ display:block; }
+.gg-form__done .gg-check{
+  width:56px;height:56px;margin:0 auto 1rem;
+  border:1px solid var(--amber);
+  color:var(--amber);
+  display:grid;place-content:center;
+}
+
+/* ------------------------------------------------------------------ */
+/* 5. ДОСТУПНОСТЬ — видимый фокус с клавиатуры                          */
+/* ------------------------------------------------------------------ */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+summary:focus-visible{
+  outline:2px solid var(--amber);
+  outline-offset:2px;
+}
+/* убираем дефолтный маркер у деталей, фокус остаётся на summary */
+summary{ outline-offset:2px; }
+
+/* ------------------------------------------------------------------ */
+/* prefers-reduced-motion: отключаем всё движение                      */
+/* ------------------------------------------------------------------ */
+@media (prefers-reduced-motion:reduce){
+  html{ scroll-behavior:auto; }
+  html.gg-js .gg-reveal{ opacity:1 !important; transform:none !important; transition:none !important; }
+  .btn-amber,.btn-ghost,.card-glass{ transition:none !important; }
+  .btn-amber:hover,.btn-ghost:hover,.card-glass:hover{ transform:none !important; }
+  .crack-path{ animation:none !important; stroke-dashoffset:0 !important; }
+  .gg-form.is-sending button[type="submit"] svg{ animation:none !important; }
+}

@@ -1,0 +1,18 @@
+# Логи заявок (персональные данные — НЕ коммитим)
+api/leads/
+*.log
+
+# Секреты
+.env
+.env.*
+*.local
+
+# ОС / редакторы
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Временное
+*.tmp
+node_modules/
