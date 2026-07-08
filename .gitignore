@@ -21,3 +21,6 @@ node_modules/
 .orig_lovable.html
 .orig_text.txt
 .repo-body.json
+
+# Handoff-документ с серверными доступами — НЕ коммитим (репо публичный)
+DEPLOY-HANDOFF.md
