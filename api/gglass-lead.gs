@@ -14,7 +14,6 @@
  */
 
 var LEAD_TO_CLIENT = 'gglass-detailing@yandex.ru';
-var LEAD_TO_DEV    = 'brykun123@gmail.com'; // временно, убрать на бою
 // Общий секрет с api/lead.php (env LEAD_RELAY_TOKEN). Пусто = проверка выключена.
 // Задать одинаковое значение здесь и в LEAD_RELAY_TOKEN на сервере — тогда
 // публичный /exec молча отбрасывает чужие POST без верного token (антиспам).
@@ -61,7 +60,7 @@ function doPost(e) {
       '</p>' +
     '</div>';
 
-  var recipients = LEAD_TO_CLIENT + (LEAD_TO_DEV ? ',' + LEAD_TO_DEV : '');
+  var recipients = LEAD_TO_CLIENT;
   GmailApp.sendEmail(recipients, subject, '', {
     htmlBody: html,
     name: 'Gglass Academy',       // буквальный текст, не unicode-escape
