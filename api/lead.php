@@ -50,8 +50,7 @@ function lead_relay_post($url, array $fields) {
             CURLOPT_POST           => true,
             CURLOPT_POSTFIELDS     => $body,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_FOLLOWLOCATION => true,  // GAS /exec отвечает 302 на googleusercontent
-            CURLOPT_MAXREDIRS      => 5,
+            CURLOPT_FOLLOWLOCATION => false, // GAS /exec отвечает 302 (это успех); идти по нему нельзя — target даёт 411
             CURLOPT_CONNECTTIMEOUT => 8,
             CURLOPT_TIMEOUT        => 15,
             CURLOPT_HTTPHEADER     => ['Content-Type: application/x-www-form-urlencoded'],
